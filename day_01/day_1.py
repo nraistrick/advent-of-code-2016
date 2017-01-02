@@ -18,6 +18,24 @@ INPUT = "R3, L5, R2, L1, L2, R5, L2, R2, L2, L2, L1, R2, L2, R4, R4, R1, " \
         "R1, R5, R3"
 
 
+def get_actual_bunny_hq_coordinates(directions):
+    """
+    Follows the specified directions until we visit the same coordinates twice.
+    This is where the actual bunny HQ is.
+
+    :param str directions: A long stream of instructions
+    :return: Final (x, y) coordinates
+    :rtype: tuple[int, int]
+    """
+    visited_locations = set()
+
+    coordinate_map = CoordinateMap()
+    for coordinates in get_next_coordinates(coordinate_map, directions):
+        if coordinates in visited_locations:
+            return coordinates
+        visited_locations.add(coordinates)
+
+
 def get_final_coordinates(directions):
     """
     Calculate final location coordinates for bunny HQ
@@ -27,6 +45,19 @@ def get_final_coordinates(directions):
     :rtype: tuple[int, int]
     """
     coordinate_map = CoordinateMap()
+    coordinates = None
+    for coordinates in get_next_coordinates(coordinate_map, directions):
+        pass
+
+    return coordinates
+
+
+def get_next_coordinates(coordinate_map, directions):
+    """
+    :type coordinate_map: CoordinateMap
+    :type directions: str
+    :rtype: tuple
+    """
     change_direction = {"L": coordinate_map.turn_left,
                         "R": coordinate_map.turn_right}
 
@@ -34,8 +65,7 @@ def get_final_coordinates(directions):
         change_direction[direction]()
         for _ in xrange(steps):
             coordinate_map.step_forward()
-
-    return coordinate_map.coordinates
+            yield tuple(coordinate_map.coordinates)
 
 
 def get_next_movement(directions):
@@ -69,6 +99,12 @@ def main():
     print "Final Coordinates: %s" % str(final_coordinates)
 
     distance_from_bunny_hq = calculate_block_distance(final_coordinates)
+    print "Block distance from origin: %s" % str(distance_from_bunny_hq)
+
+    actual_hq_coordinates = get_actual_bunny_hq_coordinates(INPUT)
+    print "Actual HQ Coordinates: %s" % str(final_coordinates)
+
+    distance_from_bunny_hq = calculate_block_distance(actual_hq_coordinates)
     print "Block distance from origin: %s" % str(distance_from_bunny_hq)
 
 
