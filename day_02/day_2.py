@@ -48,7 +48,7 @@ def follow_instructions(file_name):
     :return: The resulting PIN
     :rtype: str
     """
-    keypad = Keypad(1, 1, Keypad.LAYOUT)
+    keypad = Keypad(Keypad.LAYOUT)
     steps_for_each_digit = get_list_of_steps(file_name)
     pin = create_pin(keypad, steps_for_each_digit)
 
@@ -63,7 +63,7 @@ def follow_complex_instructions(file_name):
     :return: The resulting PIN
     :rtype: str
     """
-    keypad = Keypad(2, 0, Keypad.COMPLEX_LAYOUT)
+    keypad = Keypad(Keypad.COMPLEX_LAYOUT)
     steps_for_each_digit = get_list_of_steps(file_name)
     pin = create_pin(keypad, steps_for_each_digit)
 

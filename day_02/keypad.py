@@ -21,14 +21,10 @@ class Keypad(object):
                       ("0", "A", "B", "C", "0"),
                       ("0", "0", "D", "0", "0"))
 
-    def __init__(self, row, column, layout):
+    def __init__(self, layout):
         """
-        :param int row: The row to point to
-        :param int column: The column to point to
         :param str layout: The layout of the keypad
         """
-        self.row = row
-        self.column = column
         self.move_in_direction = {"U": self.move_up,
                                   "D": self.move_down,
                                   "L": self.move_left,
@@ -36,6 +32,7 @@ class Keypad(object):
         self.layout = layout
         self.max_row = len(self.layout) - 1
         self.max_column = len(self.layout[0]) - 1
+        self.row, self.column = self.starting_coordinates()
 
     def check_valid_button(self, row, column):
         """
@@ -107,6 +104,19 @@ class Keypad(object):
         :rtype: str
         """
         return self.layout[self.row][self.column]
+
+    def starting_coordinates(self, value=STARTING_KEY):
+        """
+        Find the coordinates of the starting key.
+
+        :param str value: The value of the starting key
+        :return: Starting key coordinates
+        :rtype: tuple(int, int)
+        """
+        for row in xrange(self.max_row + 1):
+            for column in xrange(self.max_column + 1):
+                if self.layout[row][column] == value:
+                    return row, column
 
     def move(self, direction):
         """
