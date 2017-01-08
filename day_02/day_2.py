@@ -48,7 +48,22 @@ def follow_instructions(file_name):
     :return: The resulting PIN
     :rtype: str
     """
-    keypad = Keypad(1, 1)
+    keypad = Keypad(1, 1, Keypad.LAYOUT)
+    steps_for_each_digit = get_list_of_steps(file_name)
+    pin = create_pin(keypad, steps_for_each_digit)
+
+    return pin
+
+
+def follow_complex_instructions(file_name):
+    """
+    Using the instructions, find the PIN code for the toilet on the complex keypad
+
+    :param str file_name: The file name to get the instructions from
+    :return: The resulting PIN
+    :rtype: str
+    """
+    keypad = Keypad(2, 0, Keypad.COMPLEX_LAYOUT)
     steps_for_each_digit = get_list_of_steps(file_name)
     pin = create_pin(keypad, steps_for_each_digit)
 
@@ -58,6 +73,9 @@ def follow_instructions(file_name):
 def main():
     pin = follow_instructions("input/actual_instructions.txt")
     print "Toilet door PIN: %s" % pin
+
+    pin = follow_complex_instructions("input/actual_instructions.txt")
+    print "Complex toilet door PIN: %s" % pin
 
 
 if __name__ == '__main__':
