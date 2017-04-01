@@ -16,7 +16,7 @@ class TestKeypadCodeFinder(TestCase):
         self.assertEqual("1985", pin)
 
     def test_complex_keypad(self):
-        pin = follow_complex_instructions("input/keypad_test_instructions.txt")
+        pin = follow_complex_instructions(TEST_FILE)
         self.assertEqual("5DB3", pin)
 
 
