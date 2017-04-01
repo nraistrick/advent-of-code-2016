@@ -1,7 +1,7 @@
 import unittest
 from mock import Mock, patch
 
-from common.common import get_file_lines
+from common.common import get_file_lines, grouper
 
 
 class CommonTester(unittest.TestCase):
@@ -13,6 +13,22 @@ class CommonTester(unittest.TestCase):
             mock_open.return_value.__iter__ = Mock(return_value=iter(data))
             lines = [line for line in get_file_lines("not_real.txt")]
             self.assertEqual(lines, data)
+
+    def test_grouper(self):
+        output = [i for i in grouper([1, 2, 3, 4], 2)]
+        self.assertEqual(output, [(1, 2), (3, 4)])
+
+        output = [i for i in grouper([1, 2, 3, 4, 5, 6, 7, 8, 9], 3)]
+        self.assertEqual(output, [(1, 2, 3), (4, 5, 6), (7, 8, 9)])
+
+        output = [i for i in grouper([1, 2, 3], 2)]
+        self.assertEqual(output, [(1, 2), (3, None)])
+
+        output = [i for i in grouper([1, 2, 3], 2, 0)]
+        self.assertEqual(output, [(1, 2), (3, 0)])
+
+        output = [i for i in grouper([1, 2, 3], 2, "a")]
+        self.assertEqual(output, [(1, 2), (3, "a")])
 
 
 if __name__ == '__main__':

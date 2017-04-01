@@ -3,7 +3,7 @@ Calculates the number of valid triangles from a list of data containing
 three side lengths
 """
 
-from common.common import get_file_lines
+from common.common import get_file_lines, grouper
 
 
 def parse_triangle_data(file_path):
@@ -17,6 +17,34 @@ def parse_triangle_data(file_path):
         side_1, side_2, side_3 = filter(None, line.split(' '))
         triangle_data = int(side_1), int(side_2), int(side_3)
         triangles.append(triangle_data)
+
+    return triangles
+
+
+def get_vertical_triangle_data(file_path):
+    """
+    Read in triangle data from a file
+
+    :param str file_path: Path to the file
+    :return: A list of triangle data
+    :rtype: list(tuple)
+    """
+    triangles = []
+
+    triangle_column_0 = []
+    triangle_column_1 = []
+    triangle_column_2 = []
+
+    with open(file_path, "r") as triangle_data:
+        for triangle_line in triangle_data:
+            line_data = filter(None, triangle_line.strip('\n').split(' '))
+            triangle_column_0.append(int(line_data[0]))
+            triangle_column_1.append(int(line_data[1]))
+            triangle_column_2.append(int(line_data[2]))
+
+        serial_triangle_values = triangle_column_0 + triangle_column_1 + triangle_column_2
+        for group_data in grouper(serial_triangle_values, 3):
+            triangles.append(group_data)
 
     return triangles
 
@@ -59,8 +87,13 @@ def is_valid_triangle(first_side_length, second_side_length, third_side_length):
 
 
 def main():
-    triangle_data = parse_triangle_data("input/triangle_data.txt")
-    print count_valid_triangles(triangle_data)
+    input_file_path = "input/triangle_data.txt"
+
+    triangle_data = parse_triangle_data(input_file_path)
+    print "Number of horizontal triangles %s" % count_valid_triangles(triangle_data)
+
+    triangle_data = get_vertical_triangle_data(input_file_path)
+    print "Number of vertical triangles %s" % count_valid_triangles(triangle_data)
 
 
 if __name__ == '__main__':
