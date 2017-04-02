@@ -1,3 +1,7 @@
+import operator
+from common.common import count_characters
+
+
 def get_encrypted_room_name(room_identifier):
     """
     Extract a room name from a full room string such as:
@@ -33,3 +37,18 @@ def get_hash_value(room_identifier):
     """
     start_position = room_identifier.index("[")
     return room_identifier[start_position+1:-1]
+
+
+def calculate_room_hash_value(room_identifier):
+    """
+    :type room_identifier: str
+    :rtype: str
+    """
+    counts = count_characters(room_identifier.replace("-", ""))
+    alphabetically_sorted = sorted(counts.items(),
+                                   key=operator.itemgetter(0))
+    most_common_characters = sorted(alphabetically_sorted,
+                                    key=operator.itemgetter(1),
+                                    reverse=True)
+
+    return ''.join(c[0] for c in most_common_characters[:5])

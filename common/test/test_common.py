@@ -1,7 +1,7 @@
 import unittest
 from mock import Mock, patch
 
-from common.common import get_file_lines, grouper
+from common.common import get_file_lines, grouper, count_characters
 
 
 class CommonTester(unittest.TestCase):
@@ -29,6 +29,11 @@ class CommonTester(unittest.TestCase):
 
         output = [i for i in grouper([1, 2, 3], 2, "a")]
         self.assertEqual(output, [(1, 2), (3, "a")])
+
+    def test_count_characters(self):
+        self.assertEqual(count_characters("abc"), {"a": 1, "b": 1, "c": 1})
+        self.assertEqual(count_characters("aba"), {"a": 2, "b": 1})
+        self.assertEqual(count_characters("zzz"), {"z": 3})
 
 
 if __name__ == '__main__':

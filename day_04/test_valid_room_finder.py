@@ -1,5 +1,9 @@
 import unittest
-from day_04.day_4 import get_encrypted_room_name, get_sector_id, get_hash_value
+from day_04.day_4 import \
+    get_encrypted_room_name, \
+    get_sector_id, \
+    get_hash_value, \
+    calculate_room_hash_value
 
 
 class TestValidRoomFinder(unittest.TestCase):
@@ -72,6 +76,19 @@ class TestValidRoomFinder(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             get_hash_value(self.invalid_room_input)
+
+    def test_hash_value_calculation(self):
+        self.assertEqual(self.valid_room_1_hash_value,
+                         calculate_room_hash_value(self.valid_room_1_encrypted_name), )
+
+        self.assertEqual(self.valid_room_2_hash_value,
+                         calculate_room_hash_value(self.valid_room_2_encrypted_name))
+
+        self.assertEqual(self.valid_room_3_hash_value,
+                         calculate_room_hash_value(self.valid_room_3_encrypted_name))
+
+        self.assertNotEquals(self.invalid_room_1_hash_value,
+                             calculate_room_hash_value(self.invalid_room_1_encrypted_name))
 
 
 if __name__ == '__main__':

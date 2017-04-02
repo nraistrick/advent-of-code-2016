@@ -25,3 +25,20 @@ def grouper(iterable, chunk_size, fill_value=None):
     """
     args = [iter(iterable)] * chunk_size
     return izip_longest(*args, fillvalue=fill_value)
+
+
+def count_characters(input_text):
+    """
+    Creates sum totals of all characters from an input
+
+    :type input_text: str
+    :rtype: dict
+    """
+    counts = {}
+    for character in input_text:
+        if character in counts:
+            counts[character] += 1
+        else:
+            counts[character] = 1
+
+    return counts
