@@ -1,5 +1,10 @@
+"""
+Finds information regarding north pole objects using a collection of
+room identifiers
+"""
+
 import operator
-from common.common import count_characters
+from common.common import count_characters, get_file_lines
 
 
 def get_encrypted_room_name(room_identifier):
@@ -64,3 +69,25 @@ def validate_room_name(room_identifier):
     hash_value = get_hash_value(room_identifier)
 
     return True if expected_hash_value == hash_value else False
+
+
+def calculate_sector_id_sum(file_path):
+    """
+    :type file_path: str
+    :rtype: int
+    """
+    sector_id_sum = 0
+    for room_string in get_file_lines(file_path):
+        if validate_room_name(room_string):
+            sector_id_sum += get_sector_id(room_string)
+
+    return sector_id_sum
+
+
+def main():
+    print "The sum of valid sector IDs is: %d" % \
+          calculate_sector_id_sum("input/raw_room_data.txt")
+
+
+if __name__ == "__main__":
+    main()
