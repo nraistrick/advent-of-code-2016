@@ -52,3 +52,15 @@ def calculate_room_hash_value(room_identifier):
                                     reverse=True)
 
     return ''.join(c[0] for c in most_common_characters[:5])
+
+
+def validate_room_name(room_identifier):
+    """
+    :type room_identifier: str
+    :rtype: bool
+    """
+    room_name = get_encrypted_room_name(room_identifier)
+    expected_hash_value = calculate_room_hash_value(room_name)
+    hash_value = get_hash_value(room_identifier)
+
+    return True if expected_hash_value == hash_value else False
