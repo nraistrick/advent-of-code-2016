@@ -4,7 +4,8 @@ from day_04.day_4 import \
     get_sector_id, \
     get_hash_value, \
     calculate_room_hash_value, \
-    validate_room_name
+    validate_room_name, \
+    decrypt_room_name
 
 
 class TestValidRoomFinder(unittest.TestCase):
@@ -96,6 +97,10 @@ class TestValidRoomFinder(unittest.TestCase):
         self.assertEqual(True, validate_room_name(self.valid_room_2))
         self.assertEqual(True, validate_room_name(self.valid_room_3))
         self.assertEqual(False, validate_room_name(self.invalid_room_1))
+
+    def test_decrypt_room_name(self):
+        self.assertEqual("very encrypted name",
+                         decrypt_room_name("qzmt-zixmtkozy-ivhz", 343))
 
 
 if __name__ == '__main__':

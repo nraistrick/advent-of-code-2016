@@ -42,3 +42,25 @@ def count_characters(input_text):
             counts[character] = 1
 
     return counts
+
+
+def rotate_character(character, rotations):
+    """
+    Rotate a alphabetic character forward a number of times. Each rotation
+    moves the character to the next one in the alphabet
+    e.g. a -> b, b -> c, z -> a
+
+    :param str character: A single letter from a-z
+    :param int rotations: The number of times to rotate the character by
+    :rtype: str
+    """
+    # Ensure we're working in lower case for consistent ASCII values
+    character = character.lower()
+
+    current_character_value = ord(character)
+    for _ in range(rotations):
+        current_character_value += 1
+        if current_character_value > ord('z'):
+            current_character_value = ord('a')
+
+    return chr(current_character_value)

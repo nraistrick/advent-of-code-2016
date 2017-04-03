@@ -4,7 +4,7 @@ room identifiers
 """
 
 import operator
-from common.common import count_characters, get_file_lines
+from common.common import count_characters, get_file_lines, rotate_character
 
 
 def get_encrypted_room_name(room_identifier):
@@ -84,9 +84,49 @@ def calculate_sector_id_sum(file_path):
     return sector_id_sum
 
 
+def decrypt_room_name(encrypted_name, sector_id):
+    """
+    :param str encrypted_name: The encrypted room name
+    :param int sector_id: The sector ID of the room
+    :rtype: str
+    """
+    decrypted_name = ""
+    for character in encrypted_name:
+        if character == '-':
+            decrypted_name += " "
+        else:
+            decrypted_name += rotate_character(character, sector_id)
+
+    return decrypted_name
+
+
+def get_north_pole_room(file_path):
+    """
+    Finds a decrypted room name that contains the north pole objects
+
+    :param file_path: The path to the raw data
+    :return: The decrypted room name and sector ID
+    :rtype: (str, int)
+    """
+    for room_string in get_file_lines(file_path):
+        if not validate_room_name(room_string):
+            continue
+
+        encrypted_room_name = get_encrypted_room_name(room_string)
+        sector_id = get_sector_id(room_string)
+        room_name = decrypt_room_name(encrypted_room_name, sector_id)
+        if "pole" in room_name:
+            return room_name, get_sector_id(room_string)
+
+
 def main():
-    print "The sum of valid sector IDs is: %d" % \
-          calculate_sector_id_sum("input/raw_room_data.txt")
+    """
+    Sum all valid sector IDs then find the location of the north pole objects
+    """
+    input_file = "input/raw_room_data.txt"
+
+    print "Sum of valid sector IDs: %d" % calculate_sector_id_sum(input_file)
+    print "North pole objects are stored at: %s %d" % get_north_pole_room(input_file)
 
 
 if __name__ == "__main__":

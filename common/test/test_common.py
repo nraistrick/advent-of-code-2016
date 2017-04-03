@@ -1,7 +1,8 @@
 import unittest
 from mock import Mock, patch
 
-from common.common import get_file_lines, grouper, count_characters
+from common.common import get_file_lines, grouper, count_characters, \
+    rotate_character
 
 
 class CommonTester(unittest.TestCase):
@@ -34,6 +35,13 @@ class CommonTester(unittest.TestCase):
         self.assertEqual(count_characters("abc"), {"a": 1, "b": 1, "c": 1})
         self.assertEqual(count_characters("aba"), {"a": 2, "b": 1})
         self.assertEqual(count_characters("zzz"), {"z": 3})
+
+    def test_rotate_character(self):
+        self.assertEqual(rotate_character('a', 1), 'b')
+        self.assertEqual(rotate_character('z', 1), 'a')
+        self.assertEqual(rotate_character('b', 3), 'e')
+        self.assertEqual(rotate_character('x', 10), 'h')
+        self.assertEqual(rotate_character('c', 52), 'c')
 
 
 if __name__ == '__main__':
