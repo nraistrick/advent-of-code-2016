@@ -2,7 +2,7 @@ import unittest
 from mock import Mock, patch
 
 from common.common import get_file_lines, grouper, count_characters, \
-    rotate_character
+    rotate_character, get_md5_hash
 
 
 class CommonTester(unittest.TestCase):
@@ -42,6 +42,14 @@ class CommonTester(unittest.TestCase):
         self.assertEqual(rotate_character('b', 3), 'e')
         self.assertEqual(rotate_character('x', 10), 'h')
         self.assertEqual(rotate_character('c', 52), 'c')
+
+    def test_get_md5_hash(self):
+        self.assertEqual(get_md5_hash("abc"),
+                         "900150983cd24fb0d6963f7d28e17f72")
+        self.assertEqual(get_md5_hash("a1b2c3d4e5"),
+                         "cb3bae31bb1c443fbf3db8889055f2fe")
+        self.assertEqual(get_md5_hash("a very slightly longer string"),
+                         "62dbba1fbe158598e7176b7a2085ba23")
 
 
 if __name__ == '__main__':

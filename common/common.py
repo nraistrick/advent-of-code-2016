@@ -1,6 +1,7 @@
 """
 Shared functionality for advent of code
 """
+import hashlib
 from itertools import izip_longest
 
 
@@ -64,3 +65,14 @@ def rotate_character(character, rotations):
             current_character_value = ord('a')
 
     return chr(current_character_value)
+
+
+def get_md5_hash(text):
+    """
+    Gets the MD5 hash value for an input string
+
+    :param str text: The input string
+    :return: The MD5 hash
+    :rtype: str
+    """
+    return hashlib.md5(text).hexdigest()
