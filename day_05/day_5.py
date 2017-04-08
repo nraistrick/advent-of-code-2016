@@ -44,17 +44,26 @@ def calculate_advanced_password(door_id):
     for i in itertools.count():
         value_to_hash = "%s%s" % (door_id, str(i))
         hash_value = get_md5_hash(value_to_hash)
-        if hash_value.startswith("00000"):
-            character_position = int(hash_value[5], HEXADECIMAL_BASE)
-            if character_position >= PASSWORD_LENGTH:
-                continue
-            else:
-                character = hash_value[6]
-                if password_store[character_position] == "":
-                    password_store[character_position] = character
-                    password = "".join(password_store)
-                    if len(password) == PASSWORD_LENGTH:
-                        break
+
+        if not hash_value.startswith("00000"):
+            # Not a hash value of interest
+            continue
+
+        character_position = int(hash_value[5], HEXADECIMAL_BASE)
+        if character_position >= PASSWORD_LENGTH:
+            # Character position doesn't fit within password length limits
+            continue
+
+        if password_store[character_position] != "":
+            # We've already stored a character at this position -
+            # we only want the first one.
+            continue
+
+        password_store[character_position] = hash_value[6]
+        password = "".join(password_store)
+        if len(password) == PASSWORD_LENGTH:
+            # We've successfully got all the password characters
+            break
 
     return password
 
