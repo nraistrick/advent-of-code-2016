@@ -32,7 +32,7 @@ def count_characters(input_text):
     """
     Creates sum totals of all characters from an input
 
-    :type input_text: str
+    :type input_text: collections.Iterable
     :rtype: dict
     """
     counts = {}
