@@ -46,6 +46,66 @@ def find_abba(input_text):
             return snapshot
 
 
+def check_ip_supports_ssl(ipv7_address):
+    """
+    Looks for an ABA (Area-Broadcast Accessor) outside square brackets
+    and a BAB (Byte Allocation Block) inside square brackets.
+
+    An ABA is a palindromic sequence of three characters for which has
+    different first and second characters.
+    e.g. aba, xyx, rtr
+
+    A BAB is the same as an ABA, but with the characters reversed.
+    e.g. aba -> bab, xyx -> yxy, rtr -> trt
+
+    :type ipv7_address: str
+    :rtype: bool
+    """
+    inside_bracket, outside_bracket = split_ip_address(ipv7_address)
+
+    possible_aba_strings = []
+    for string in outside_bracket:
+        possible_aba_strings += find_all_aba(string)
+
+    bab_characters = [(aba_string[0], aba_string[1])
+                      for aba_string in possible_aba_strings]
+
+    for string in inside_bracket:
+        for inner, outer in bab_characters:
+            if any(find_all_aba(string, inner, outer)):
+                return True
+
+    return False
+
+
+def find_all_aba(input_text,
+                 inner_character=None,
+                 outer_character=None):
+    """
+    Looks for three-character strings that are symmetrical e.g. ABA, BAB, XYX
+
+    :type inner_character: str
+    :type outer_character: str
+    :param str input_text: The input string of arbitrary length
+    :return: A list of matching strings
+    :rtype: list[str]
+    """
+    strings = []
+    for section in get_sliding_window_snapshots(input_text, 3):
+        if not is_palindrome(section):
+            continue
+
+        if outer_character and section[0] != outer_character:
+            continue
+
+        if inner_character and section[1] != inner_character:
+            continue
+
+        strings.append(section)
+
+    return strings
+
+
 def split_ip_address(ipv7_address):
     """
     We expect a string containing characters inside and outside of enclosing
@@ -77,8 +137,13 @@ def split_ip_address(ipv7_address):
 
 
 def main():
-    ips = [ip for ip in get_file_lines("input.txt") if check_ip_supports_tls(ip)]
-    print "The number of IPs that support TLS is: %s" % len(ips)
+    input_file_path = "input.txt"
+
+    tls_ips = [ip for ip in get_file_lines(input_file_path) if check_ip_supports_tls(ip)]
+    print "The number of IPs that support TLS is: %s" % len(tls_ips)
+
+    ssl_ips = [ip for ip in get_file_lines(input_file_path) if check_ip_supports_ssl(ip)]
+    print "The number of IPs that support SSL is: %s" % len(ssl_ips)
 
 
 if __name__ == '__main__':
