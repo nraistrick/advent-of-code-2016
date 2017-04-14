@@ -2,7 +2,8 @@ import unittest
 from mock import Mock, patch
 
 from common.common import get_file_lines, grouper, count_characters, \
-    rotate_character, get_md5_hash
+    rotate_character, get_md5_hash, get_sliding_window_snapshots, \
+    is_palindrome
 
 
 class CommonTester(unittest.TestCase):
@@ -50,6 +51,28 @@ class CommonTester(unittest.TestCase):
                          "cb3bae31bb1c443fbf3db8889055f2fe")
         self.assertEqual(get_md5_hash("a very slightly longer string"),
                          "62dbba1fbe158598e7176b7a2085ba23")
+
+    def test_sliding_window(self):
+        snapshots = [s for s in get_sliding_window_snapshots("abc", 1, 1)]
+        self.assertEqual(snapshots, ['a', 'b', 'c'])
+
+        snapshots = [s for s in get_sliding_window_snapshots("abcd", 2, 1)]
+        self.assertEqual(snapshots, ['ab', 'bc', 'cd'])
+
+        snapshots = [s for s in get_sliding_window_snapshots("abcdefgh", 4, 4)]
+        self.assertEqual(snapshots, ['abcd', 'efgh'])
+
+        snapshots = [s for s in get_sliding_window_snapshots("abcdef", 1, 2)]
+        self.assertEqual(snapshots, ['a', 'c', 'e'])
+
+    def test_is_palindrome(self):
+        self.assertTrue(is_palindrome("aba"))
+        self.assertTrue(is_palindrome("aaaa"))
+        self.assertTrue(is_palindrome("rotor"))
+
+        self.assertFalse(is_palindrome("ab"))
+        self.assertFalse(is_palindrome("cost"))
+        self.assertFalse(is_palindrome("snowman"))
 
 
 if __name__ == '__main__':

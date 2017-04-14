@@ -76,3 +76,25 @@ def get_md5_hash(text):
     :rtype: str
     """
     return hashlib.md5(text).hexdigest()
+
+
+def get_sliding_window_snapshots(string, window_size=4, slide_step_size=1):
+    """
+    Generates a series of substring values based off a sliding-window mechanism
+    operating on a larger string
+
+    :param str string: The string to slide over
+    :param int window_size: The size of the window to snapshot
+    :param int slide_step_size: The number of steps to take between window snapshots
+    :return:
+    """
+    for i in xrange(0, len(string) - window_size + 1, slide_step_size):
+        yield string[i: i + window_size]
+
+
+def is_palindrome(text):
+    """
+    :type text: str
+    :rtype: bool
+    """
+    return text == text[::-1]
