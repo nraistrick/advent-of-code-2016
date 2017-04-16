@@ -3,7 +3,7 @@ from mock import Mock, patch
 
 from common.common import get_file_lines, grouper, count_characters, \
     rotate_character, get_md5_hash, get_sliding_window_snapshots, \
-    is_palindrome
+    is_palindrome, consume
 
 
 class CommonTester(unittest.TestCase):
@@ -73,6 +73,25 @@ class CommonTester(unittest.TestCase):
         self.assertFalse(is_palindrome("ab"))
         self.assertFalse(is_palindrome("cost"))
         self.assertFalse(is_palindrome("snowman"))
+
+    def test_consume(self):
+        iterator = iter(xrange(15))
+        self.assertEqual(next(iterator), 0)
+        self.assertEqual(next(iterator), 1)
+        self.assertEqual(next(iterator), 2)
+
+        consume(iterator, 1)
+        self.assertEqual(next(iterator), 4)
+
+        consume(iterator, 2)
+        self.assertEqual(next(iterator), 7)
+
+        consume(iterator, 4)
+        self.assertEqual(next(iterator), 12)
+
+        consume(iterator)
+        with self.assertRaises(StopIteration):
+            next(iterator)
 
 
 if __name__ == '__main__':

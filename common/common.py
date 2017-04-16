@@ -1,8 +1,9 @@
 """
 Shared functionality for advent of code
 """
+import collections
 import hashlib
-from itertools import izip_longest
+from itertools import islice, izip_longest
 
 
 def get_file_lines(file_path):
@@ -98,3 +99,17 @@ def is_palindrome(text):
     :rtype: bool
     """
     return text == text[::-1]
+
+
+def consume(iterator, steps=None):
+    """
+    Advance an iterator a number of steps ahead. Consume entirely if steps
+    is set to None.
+
+    :type iterator: collections.Iterator
+    :type steps: int
+    """
+    if steps is None:
+        collections.deque(iterator, maxlen=0)
+    else:
+        next(islice(iterator, steps, steps), None)
