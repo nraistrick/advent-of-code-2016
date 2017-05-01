@@ -96,16 +96,20 @@ class TestBuilding(TestCase):
                         DUMMY_FLOOR_ITEM_2 in floor_2_contents)
 
     def test_building_equality(self):
-        floor_1_contents = {DUMMY_FLOOR_ITEM_1, DUMMY_FLOOR_ITEM_2}
-        building = Building([Floor(floor_1_contents), Floor()])
+        floor_contents = {DUMMY_FLOOR_ITEM_1, DUMMY_FLOOR_ITEM_2}
+        building = Building([Floor(floor_contents), Floor()])
         existing_buildings = [building]
         another_building = deepcopy(building)
         self.assertNotEqual(id(building), id(another_building))
+        self.assertTrue(building == another_building)
+        self.assertFalse(building != another_building)
         self.assertTrue(another_building in existing_buildings)
 
-        another_building.grab_items(floor_1_contents)
+        another_building.grab_items(floor_contents)
         another_building.go_up_in_elevator()
         self.assertNotEqual(building.elevator_floor_id, another_building.elevator_floor_id)
+        self.assertFalse(building == another_building)
+        self.assertTrue(building != another_building)
         self.assertFalse(another_building in existing_buildings)
 
         building = Building([EMPTY_FLOOR, EMPTY_FLOOR])
@@ -113,6 +117,7 @@ class TestBuilding(TestCase):
         another_building._elevator_floor_id = 2
         self.assertNotEqual(building.elevator_floor_id, another_building.elevator_floor_id)
         self.assertFalse(building == another_building)
+        self.assertTrue(building != another_building)
 
     def test_deepcopy(self):
         building = Building([EMPTY_FLOOR])
