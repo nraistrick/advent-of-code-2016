@@ -1,6 +1,5 @@
-from day_11.floor.item import FloorItem
-from day_11.floor.item_type import FloorItemType
-from day_11.floor.microchip_destroyed import MicrochipDestroyed
+from item import FloorItem
+from item_type import FloorItemType
 
 
 class Floor(object):
@@ -17,14 +16,15 @@ class Floor(object):
             assert isinstance(item, FloorItem)
 
         self.contents = contents
-        self._check_safe()
+        self._check_safe(self.contents)
 
-    def _check_safe(self):
+    @staticmethod
+    def _check_safe(items):
         """Validate the floor"""
         def check_if_microchips_destroyed():
             generator_elements = set()
             microchip_elements = set()
-            for i in self.contents:
+            for i in items:
                 if i.type == FloorItemType.GENERATOR:
                     generator_elements.add(i.element_id)
                 else:
@@ -32,17 +32,17 @@ class Floor(object):
 
             destroyed_microchip_ids = microchip_elements - generator_elements
             if generator_elements and destroyed_microchip_ids:
-                raise MicrochipDestroyed("Microchip(s) destroyed with element ID(s): %s" %
-                                         str(destroyed_microchip_ids))
+                return True
 
-        check_if_microchips_destroyed()
+            return False
+
+        return not check_if_microchips_destroyed()
 
     def add_items(self, items):
         """
         :type items: set[FloorItem]
         """
         self.contents |= items
-        self._check_safe()
 
     def remove_items(self, items):
         """
@@ -53,7 +53,14 @@ class Floor(object):
             raise ValueError("Could not find matching floor items: %s" % str(items))
 
         self.contents -= items
-        self._check_safe()
+
+    def check_safe_to_add_items(self, items):
+        updated_contents = self.contents | items
+        return self._check_safe(updated_contents)
+
+    def check_safe_to_remove_items(self, items):
+        updated_contents = self.contents - items
+        return self._check_safe(updated_contents)
 
     @staticmethod
     def sort_items(items):

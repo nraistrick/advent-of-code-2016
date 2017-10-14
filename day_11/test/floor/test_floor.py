@@ -4,7 +4,6 @@ from unittest import TestCase
 from day_11.floor.floor import Floor
 from day_11.floor.item import FloorItem
 from day_11.floor.item_type import FloorItemType
-from day_11.floor.microchip_destroyed import MicrochipDestroyed
 from day_11.test.floor import ELEMENT_1, ELEMENT_2
 
 ELEMENT_1_GENERATOR = FloorItem(ELEMENT_1, FloorItemType.GENERATOR)
@@ -22,32 +21,6 @@ class TestFloor(TestCase):
         """
         contents = {ELEMENT_1_GENERATOR, ELEMENT_1_MICROCHIP}
         Floor(contents)
-
-    def test_cannot_create_unsafe_floor(self):
-        """
-        Checks the floor will raise an exception that a microchip has been
-        destroyed with an invalid floor item configuration.
-        """
-        contents = {ELEMENT_1_GENERATOR, ELEMENT_2_MICROCHIP}
-        with self.assertRaises(MicrochipDestroyed) as context:
-            Floor(contents)
-        self.assertTrue("Microchip(s) destroyed" in context.exception.message)
-
-    def test_remove_at_least_one_item(self):
-        floor = Floor()
-        with self.assertRaises(ValueError):
-            floor.remove_items(set())
-
-    def test_make_floor_unsafe(self):
-        floor = Floor({ELEMENT_1_GENERATOR})
-        with self.assertRaises(MicrochipDestroyed) as context:
-            floor.add_items({ELEMENT_2_MICROCHIP})
-        self.assertTrue("Microchip(s) destroyed" in context.exception.message)
-
-        floor = Floor({ELEMENT_1_GENERATOR, ELEMENT_1_MICROCHIP, ELEMENT_2_GENERATOR})
-        with self.assertRaises(MicrochipDestroyed) as context:
-            floor.remove_items({ELEMENT_1_GENERATOR})
-        self.assertTrue("Microchip(s) destroyed" in context.exception.message)
 
     def test_floor_equalities(self):
         floor_1 = Floor({ELEMENT_1_GENERATOR, ELEMENT_1_MICROCHIP})

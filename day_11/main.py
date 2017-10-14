@@ -14,7 +14,6 @@ from day_11.building.elevator_movement_type import ElevatorMovementType
 from day_11.floor.floor import Floor
 from day_11.floor.item import FloorItem
 from day_11.floor.item_type import FloorItemType
-from day_11.floor.microchip_destroyed import MicrochipDestroyed
 from day_11.move.move import Move
 
 
@@ -65,6 +64,13 @@ def get_possible_moves(building):
     for direction in building.available_elevator_directions:
         for items in item_combinations:
             yield Move(direction, set(items))
+
+
+def check_next_move_safe(building, move):
+    if move.direction == ElevatorMovementType.UP:
+        return building.check_safe_to_go_up_in_elevator(set(move.items))
+    else:
+        return building.check_safe_to_go_down_in_elevator(set(move.items))
 
 
 def puzzle_complete(building, total_building_items):
@@ -122,20 +128,18 @@ def create_valid_move_tree(start_building):
             continue
 
         for move in get_possible_moves(building):
+            if not check_next_move_safe(building, move):
+                continue
             copied_building = deepcopy(building)
-            try:
-                execute_move(copied_building, move)
-                if copied_building in used_building_versions:
-                    continue
+            execute_move(copied_building, move)
+            if copied_building in used_building_versions:
+                continue
 
-                if puzzle_complete(copied_building, total_building_items):
-                    solution_depth = parent_node + 1
-                    return solution_depth
+            if puzzle_complete(copied_building, total_building_items):
+                solution_depth = parent_node + 1
+                return solution_depth
 
-                buildings.append((copied_building, parent_node + 1))
-
-            except MicrochipDestroyed:
-                pass
+            buildings.append((copied_building, parent_node + 1))
 
         used_building_versions.add(building)
 

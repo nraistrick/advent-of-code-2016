@@ -64,6 +64,22 @@ class Building(object):
         self._current_floor.add_items(self.elevator_items)
         self._elevator_items = set()
 
+    def check_safe_to_go_up_in_elevator(self, items):
+        safe_to_remove = self._current_floor.check_safe_to_remove_items(items)
+        if not safe_to_remove:
+            return False
+        new_floor = self.elevator_floor_id + 1
+        safe_to_add = self.floors[new_floor - 1].check_safe_to_add_items(items)
+        return safe_to_add
+
+    def check_safe_to_go_down_in_elevator(self, items):
+        safe_to_remove = self._current_floor.check_safe_to_remove_items(items)
+        if not safe_to_remove:
+            return False
+        new_floor = self.elevator_floor_id - 1
+        safe_to_add = self.floors[new_floor - 1].check_safe_to_add_items(items)
+        return safe_to_add
+
     def grab_items(self, items):
         """
         :type items: set[day_11.floor.item.FloorItem]
