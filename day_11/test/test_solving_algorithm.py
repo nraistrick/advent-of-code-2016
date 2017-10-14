@@ -107,11 +107,11 @@ class TestAlgorithm(TestCase):
         populated_floor = Floor({self.DUMMY_MICROCHIP_1, self.DUMMY_GENERATOR_1})
         building = Building([empty_floor, empty_floor, populated_floor])
         building._elevator_floor_id = building.top_floor_id
-        self.assertTrue(puzzle_complete(building))
+        self.assertTrue(puzzle_complete(building, len(building.get_all_items())))
 
         building = Building([empty_floor, populated_floor])
         building._elevator_floor_id = building.top_floor_id
-        self.assertTrue(puzzle_complete(building))
+        self.assertTrue(puzzle_complete(building, len(building.get_all_items())))
 
     def test_execute_move(self):
         floor_item_combination_1 = {self.DUMMY_MICROCHIP_1, self.DUMMY_MICROCHIP_2}
@@ -120,13 +120,13 @@ class TestAlgorithm(TestCase):
         floor_with_two_items = Floor(floor_item_combination_1)
 
         building = Building([floor_with_two_items, empty_floor])
-        self.assertFalse(puzzle_complete(building))
+        self.assertFalse(puzzle_complete(building, len(building.get_all_items())))
 
         possible_moves = [m for m in get_possible_moves(building)]
         self.assertEqual(len(possible_moves), 3)
 
         execute_move(building, possible_moves[0])
-        self.assertTrue(puzzle_complete(building))
+        self.assertTrue(puzzle_complete(building, len(building.get_all_items())))
 
     def test_solve_easiest_problem(self):
         hydrogen_element = "hydrogen"

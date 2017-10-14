@@ -67,13 +67,14 @@ def get_possible_moves(building):
             yield Move(direction, set(items))
 
 
-def puzzle_complete(building):
+def puzzle_complete(building, total_building_items):
     """
     :type building: Building
+    :type total_building_items: int
     :rtype: bool
     """
     if building.elevator_floor_id == building.top_floor_id and \
-            set(building.current_floor_items) == set(building.all_items):
+            len(building.current_floor_items) == total_building_items:
         return True
     return False
 
@@ -113,6 +114,7 @@ def create_valid_move_tree(start_building):
     """
     start_node = "START"
     root_node = Node(start_node)
+    total_building_items = len(start_building.get_all_items())
     used_building_versions = set()
 
     buildings = [(start_building, root_node)]
@@ -130,9 +132,8 @@ def create_valid_move_tree(start_building):
 
                 child = Node(str(move), parent=parent_node)
 
-                if puzzle_complete(copied_building):
-                    new_node = Node("PUZZLE COMPLETE", parent=child)
-                    solution_depth = new_node.depth - 1
+                if puzzle_complete(copied_building, total_building_items):
+                    solution_depth = parent_node.depth + 1
                     return solution_depth
 
                 buildings.append((copied_building, child))

@@ -21,13 +21,6 @@ class Building(object):
         self.top_floor_id = len(self.floors)
         self._elevator_floor_id = self.bottom_floor_id
 
-        self._all_items = self.get_all_items()
-
-    def _check_no_duplicate_items(self):
-        all_items = self.all_items
-        if len(all_items) != len(set(all_items)):
-            raise ValueError("Duplicate items added to building")
-
     def get_all_items(self):
         """
         :return: A list of all available items
@@ -95,7 +88,7 @@ class Building(object):
             print "F" + str(number),
 
         def print_floor_items(number):
-            for item in self.all_items:
+            for item in self.get_all_items():
                 if item in self.floors[number - 1].contents:
                     print " " + str(item),
                 else:
@@ -141,14 +134,6 @@ class Building(object):
         :rtype: set
         """
         return self._elevator_items
-
-    @property
-    def all_items(self):
-        """
-        :return: A list of all available items
-        :rtype: list[day_11.floor.item.FloorItem]
-        """
-        return self._all_items
 
     @property
     def items_on_floors_below(self):

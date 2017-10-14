@@ -14,19 +14,15 @@ MULTIPLE_EMPTY_FLOORS = [EMPTY_FLOOR, EMPTY_FLOOR, EMPTY_FLOOR]
 
 
 class TestBuilding(TestCase):
-    def test_cannot_add_duplicate_items(self):
-        with self.assertRaises(ValueError):
-            Building([Floor({DUMMY_FLOOR_ITEM_1}), Floor({DUMMY_FLOOR_ITEM_1})])
-
     def test_all_items(self):
         building = Building(MULTIPLE_EMPTY_FLOORS)
-        self.assertEqual(len(building.all_items), 0)
+        self.assertEqual(len(building.get_all_items()), 0)
 
         building = Building([Floor({DUMMY_FLOOR_ITEM_1})])
-        self.assertEqual(building.all_items, [DUMMY_FLOOR_ITEM_1])
+        self.assertEqual(building.get_all_items(), [DUMMY_FLOOR_ITEM_1])
 
         building = Building([Floor({DUMMY_FLOOR_ITEM_1}), Floor({DUMMY_FLOOR_ITEM_2})])
-        self.assertEqual(building.all_items, [DUMMY_FLOOR_ITEM_1, DUMMY_FLOOR_ITEM_2])
+        self.assertEqual(building.get_all_items(), [DUMMY_FLOOR_ITEM_1, DUMMY_FLOOR_ITEM_2])
 
     def test_all_floors_below_empty(self):
         building = Building([Floor({DUMMY_FLOOR_ITEM_1}), Floor({DUMMY_FLOOR_ITEM_2}), EMPTY_FLOOR])
