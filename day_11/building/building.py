@@ -1,3 +1,4 @@
+from copy import deepcopy
 from day_11.building.elevator_movement_type import ElevatorMovementType
 from day_11.floor.floor import Floor
 
@@ -193,3 +194,9 @@ class Building(object):
 
     def __repr__(self):
         return repr(self.floors)
+
+    def __deepcopy__(self, memo=None):
+        copied_floors = [deepcopy(f) for f in self.floors]
+        copied_building = Building(copied_floors)
+        copied_building._elevator_floor_id = self.elevator_floor_id
+        return copied_building

@@ -73,3 +73,7 @@ class Floor(object):
 
     def __repr__(self):
         return str(self.contents)
+
+    def __deepcopy__(self, memo=None):
+        copied_contents = set(self.contents)
+        return Floor(copied_contents)

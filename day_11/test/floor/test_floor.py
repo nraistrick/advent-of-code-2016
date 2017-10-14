@@ -77,3 +77,12 @@ class TestFloor(TestCase):
         sorted_items = [ELEMENT_1_GENERATOR, ELEMENT_1_MICROCHIP,
                         ELEMENT_2_GENERATOR, ELEMENT_2_MICROCHIP]
         self.assertEqual(Floor.sort_items(unsorted_items), sorted_items)
+
+    def test_deepcopy(self):
+        floor = Floor()
+        copied_floor = deepcopy(floor)
+        self.assertNotEqual(id(floor), id(copied_floor))
+
+        floor.add_items({ELEMENT_1_GENERATOR, ELEMENT_1_MICROCHIP})
+        self.assertEqual(len(floor.contents), 2)
+        self.assertEqual(len(copied_floor.contents), 0)
