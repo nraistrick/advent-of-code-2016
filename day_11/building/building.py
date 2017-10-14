@@ -22,7 +22,6 @@ class Building(object):
         self._elevator_floor_id = self.bottom_floor_id
 
         self._all_items = self.get_all_items()
-        self._check_no_duplicate_items()
 
     def _check_no_duplicate_items(self):
         all_items = self.all_items
