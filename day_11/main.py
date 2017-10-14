@@ -124,7 +124,7 @@ def create_valid_move_tree(start_building):
     buildings = [(start_building, 0)]
     while buildings:
         building, parent_node = buildings.pop(0)
-        if building in used_building_versions:
+        if repr(building) in used_building_versions:
             continue
 
         for move in get_possible_moves(building):
@@ -132,7 +132,8 @@ def create_valid_move_tree(start_building):
                 continue
             copied_building = deepcopy(building)
             execute_move(copied_building, move)
-            if copied_building in used_building_versions:
+
+            if repr(copied_building) in used_building_versions:
                 continue
 
             if puzzle_complete(copied_building, total_building_items):
@@ -141,7 +142,7 @@ def create_valid_move_tree(start_building):
 
             buildings.append((copied_building, parent_node + 1))
 
-        used_building_versions.add(building)
+        used_building_versions.add(repr(building))
 
 
 def solve_puzzle(building):

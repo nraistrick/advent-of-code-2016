@@ -193,7 +193,7 @@ class Building(object):
         return hash(self.elevator_floor_id) ^ hash(repr(self.floors))
 
     def __repr__(self):
-        return repr(self.floors)
+        return "%s%s" % (str(self.elevator_floor_id), repr(self.floors))
 
     def __deepcopy__(self, memo=None):
         copied_floors = [deepcopy(f) for f in self.floors]
