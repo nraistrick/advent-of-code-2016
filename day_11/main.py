@@ -124,8 +124,6 @@ def create_valid_move_tree(start_building):
     buildings = [(start_building, 0)]
     while buildings:
         building, parent_node = buildings.pop(0)
-        if repr(building) in used_building_versions:
-            continue
 
         for move in get_possible_moves(building):
             if not check_next_move_safe(building, move):
@@ -141,6 +139,7 @@ def create_valid_move_tree(start_building):
                 return solution_depth
 
             buildings.append((copied_building, parent_node + 1))
+            used_building_versions.add(repr(copied_building))
 
         used_building_versions.add(repr(building))
 
