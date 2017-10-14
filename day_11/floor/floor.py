@@ -79,7 +79,11 @@ class Floor(object):
         return not self.__eq__(floor)
 
     def __repr__(self):
-        return str(self.contents)
+        generators_or_microchips_only = [i.type for i in self.contents]
+        return str(generators_or_microchips_only)
+
+    def __hash__(self):
+        return hash(repr(self))
 
     def __deepcopy__(self, memo=None):
         copied_contents = set(self.contents)
