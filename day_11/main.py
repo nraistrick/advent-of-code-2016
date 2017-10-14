@@ -112,12 +112,10 @@ def create_valid_move_tree(start_building):
 
     :type start_building: Building
     """
-    start_node = "START"
-    root_node = Node(start_node)
     total_building_items = len(start_building.get_all_items())
     used_building_versions = set()
 
-    buildings = [(start_building, root_node)]
+    buildings = [(start_building, 0)]
     while buildings:
         building, parent_node = buildings.pop(0)
         if building in used_building_versions:
@@ -130,13 +128,11 @@ def create_valid_move_tree(start_building):
                 if copied_building in used_building_versions:
                     continue
 
-                child = Node(str(move), parent=parent_node)
-
                 if puzzle_complete(copied_building, total_building_items):
-                    solution_depth = parent_node.depth + 1
+                    solution_depth = parent_node + 1
                     return solution_depth
 
-                buildings.append((copied_building, child))
+                buildings.append((copied_building, parent_node + 1))
 
             except MicrochipDestroyed:
                 pass
