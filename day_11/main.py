@@ -158,12 +158,18 @@ def solve_puzzle(building):
 
 def solve_complex_problem():
     curium_element = "curium"
+    dilithium_element = "dilithium"
+    elerium_element = "elerium"
     plutonium_element = "plutonium"
     ruthenium_element = "ruthenium"
     strontium_element = "strontium"
     thulium_element = "thulium"
 
-    floor_1 = Floor({FloorItem(strontium_element, FloorItemType.GENERATOR),
+    floor_1 = Floor({FloorItem(dilithium_element, FloorItemType.GENERATOR),
+                     FloorItem(dilithium_element, FloorItemType.MICROCHIP),
+                     FloorItem(elerium_element, FloorItemType.GENERATOR),
+                     FloorItem(elerium_element, FloorItemType.MICROCHIP),
+                     FloorItem(strontium_element, FloorItemType.GENERATOR),
                      FloorItem(strontium_element, FloorItemType.MICROCHIP),
                      FloorItem(plutonium_element, FloorItemType.GENERATOR),
                      FloorItem(plutonium_element, FloorItemType.MICROCHIP)})
