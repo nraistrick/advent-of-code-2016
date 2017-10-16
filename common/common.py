@@ -113,3 +113,10 @@ def consume(iterator, steps=None):
         collections.deque(iterator, maxlen=0)
     else:
         next(islice(iterator, steps, steps), None)
+
+
+def is_even(number):
+    """
+    :type number: int
+    """
+    return True if number % 2 == 0 else False

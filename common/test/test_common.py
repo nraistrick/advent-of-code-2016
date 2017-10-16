@@ -3,7 +3,7 @@ from mock import Mock, patch
 
 from common.common import get_file_lines, grouper, count_characters, \
     rotate_character, get_md5_hash, get_sliding_window_snapshots, \
-    is_palindrome, consume
+    is_palindrome, consume, is_even
 
 
 class CommonTester(unittest.TestCase):
@@ -92,6 +92,15 @@ class CommonTester(unittest.TestCase):
         consume(iterator)
         with self.assertRaises(StopIteration):
             next(iterator)
+
+    def test_is_even(self):
+        self.assertTrue(is_even(2))
+        self.assertTrue(is_even(14))
+        self.assertTrue(is_even(368))
+
+        self.assertFalse(is_even(3))
+        self.assertFalse(is_even(19))
+        self.assertFalse(is_even(295))
 
 
 if __name__ == '__main__':
