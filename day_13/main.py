@@ -127,19 +127,46 @@ def find_shortest_route(coordinate_map, end):
             return move_count
 
 
-def main():
-    designers_favourite_number = 1352
-    end_coordinates = (31, 39)
+def count_locations_visited(coordinate_map, max_steps):
+    """
+    Counts the number of locations visited within a maximum number of steps
 
-    coordinate_map = create_coordinate_map(50, 50)
+    :type coordinate_map: list[list[str]]
+    :type max_steps: int
+    :rtype: int
+    """
+    locations_visited = 0
+    for _, move_count in visit_maze_location(coordinate_map):
+        if move_count > max_steps:
+            continue
+        locations_visited += 1
+
+    return locations_visited
+
+
+def create_maze(designers_favourite_number):
+    """
+    :type designers_favourite_number: int
+    :rtype: list[list[str]]
+    """
+    coordinate_map = create_coordinate_map(75, 75)
     favourite_number_added_map = add_number(coordinate_map, designers_favourite_number)
     binary_count_map = get_binary_counts(favourite_number_added_map)
-    wall_map = create_wall_map(binary_count_map)
+    return create_wall_map(binary_count_map)
 
-    move_count = find_shortest_route(wall_map, end_coordinates)
 
-    print_map(wall_map)
-    print "Solution found in %d steps" % move_count
+def main():
+    designers_favourite_number = 1352
+
+    maze = create_maze(designers_favourite_number)
+    move_count = find_shortest_route(maze, (31, 39))
+    print_map(maze)
+    print "Solution found in %d steps\n" % move_count
+
+    maze = create_maze(designers_favourite_number)
+    locations_visited = count_locations_visited(maze, 50)
+    print_map(maze)
+    print "Number of locations visited: %d" % locations_visited
 
 
 if __name__ == '__main__':
