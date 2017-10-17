@@ -15,6 +15,11 @@ from day_14.one_time_pad_finder import get_one_time_pad_values
 
 def main():
     values = get_one_time_pad_values("cuanljph", 64)
+    print "Without key-stretching:"
+    print "64th one-time pad key: %s" % str(values[63])
+
+    values = get_one_time_pad_values("cuanljph", 64, True)
+    print "With key-stretching:"
     print "64th one-time pad key: %s" % str(values[63])
 
 
