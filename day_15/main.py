@@ -39,7 +39,8 @@ def main():
              Disc(11, 17),
              Disc(0, 3),
              Disc(2, 7),
-             Disc(17, 19)]
+             Disc(17, 19),
+             Disc(0, 11)]
 
     for second in itertools.count():
         if all_discs_aligned(discs):
