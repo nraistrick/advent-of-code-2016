@@ -116,7 +116,7 @@ def calculate_number_of_safe_tiles(first_row, number_of_rows):
 def main():
     first_row = "^^.^..^.....^..^..^^...^^.^....^^^.^.^^....^.^^^...^^^^.^" + \
                 "^^^.^..^^^^.^^.^.^.^.^.^^...^^..^^^..^.^^^^"
-    safe_tiles = calculate_number_of_safe_tiles(first_row, 40)
+    safe_tiles = calculate_number_of_safe_tiles(first_row, 400000)
     print "Number of safe tiles: %d" % safe_tiles
 
 
