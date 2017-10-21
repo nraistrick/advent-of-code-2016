@@ -10,8 +10,8 @@ class Room(object):
         :param str previous_steps: Abbreviations of the previous directions
         moved e.g. "DRUL"
 
-        >>> r = Room("hijkl")
-        >>> r.can_go_up, r.can_go_down, r.can_go_left, r.can_go_right
+        >>> room = Room("hijkl")
+        >>> room.can_go_up, room.can_go_down, room.can_go_left, room.can_go_right
         (True, True, True, False)
         """
         self.passcode = passcode

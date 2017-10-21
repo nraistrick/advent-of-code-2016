@@ -31,24 +31,25 @@ def maze_solver(passcode, end_coordinates=(3, 3)):
     :type passcode: str
     :type end_coordinates: (int, int)
     :return: The shortest path i.e. the actual path, not just the length
-    :rtype: str
+    :rtype: collections.Iterator[str]
 
-    >>> maze_solver("ihgpwlah")
+    >>> next(maze_solver("ihgpwlah"))
     'DDRRRD'
-    >>> maze_solver("kglvqrro")
+    >>> next(maze_solver("kglvqrro"))
     'DDUDRLRRUDRD'
-    >>> maze_solver("ulqzkmiv")
+    >>> next(maze_solver("ulqzkmiv"))
     'DRURDRUDDLLDLUURRDULRLDUUDDDRR'
     """
     right_wall = end_coordinates[0]
     bottom_wall = end_coordinates[1]
 
     locations = [(START_COORDINATES, "")]
-    while True:
+    while locations:
         coordinates, directions = locations.pop(0)
 
         if coordinates == end_coordinates:
-            return directions
+            yield directions
+            continue
 
         x, y = coordinates
         room = Room(passcode, directions)
@@ -65,9 +66,9 @@ def maze_solver(passcode, end_coordinates=(3, 3)):
 
 def main():
     passcode = "edjrjqaa"
-    shortest_route = maze_solver(passcode)
-
-    print "The shortest route to reach the end of the maze is: %s" % shortest_route
+    routes = maze_solver(passcode)
+    for route in routes:
+        print "Route found with length: %s" % len(route)
 
 
 if __name__ == '__main__':
