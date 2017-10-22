@@ -16,31 +16,29 @@ def calculate_elf_with_all_presents(number_of_elves):
     >>> calculate_elf_with_all_presents(4)
     1
     >>> calculate_elf_with_all_presents(5)
-    3
+    2
     >>> calculate_elf_with_all_presents(6)
-    5
+    3
     >>> calculate_elf_with_all_presents(7)
-    7
-    >>> calculate_elf_with_all_presents(8)
-    1
+    5
     """
     elves = range(1, number_of_elves + 1)
 
     current = 0
 
-    # We only want the one remaining elf
     while len(elves) > 1:
 
-        remaining_elves = []
+        # The elf to remove is the opposite one in the circle
+        opposite_elf_index = (current + (len(elves) / 2)) % len(elves)
+        if opposite_elf_index < current:
+            current -= 1
 
-        # Eliminate every other elf from the game
-        while current < len(elves):
-            remaining_elves.append(elves[current])
-            current += 2
+        # Eliminate the opposite elf from the game
+        del elves[opposite_elf_index]
 
-        # Point to correct starting elf for the next round and repeat
+        # Let the next elf have a turn
+        current += 1
         current %= len(elves)
-        elves = remaining_elves
 
     return elves[0]
 
