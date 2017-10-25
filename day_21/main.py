@@ -111,7 +111,7 @@ def rotate_right(text, count):
     return text
 
 
-def rotate_based_on_letter(text, letter):
+def rotate_right_based_on_letter(text, letter):
     """
     Get the index of the provided letter, add one to it, and add an additional
     one if the index is at least four. Then perform that number of right
@@ -121,13 +121,13 @@ def rotate_based_on_letter(text, letter):
     :type letter: str
     :rtype: str
 
-    >>> rotate_based_on_letter("abdec", "b")
+    >>> rotate_right_based_on_letter("abdec", "b")
     'ecabd'
-    >>> rotate_based_on_letter("ecabd", "d")
+    >>> rotate_right_based_on_letter("ecabd", "d")
     'decab'
-    >>> rotate_based_on_letter("abcdefgh", "d")
+    >>> rotate_right_based_on_letter("abcdefgh", "d")
     'efghabcd'
-    >>> rotate_based_on_letter("abcdefgh", "f")
+    >>> rotate_right_based_on_letter("abcdefgh", "f")
     'bcdefgha'
     """
     rotations = text.index(letter)
@@ -135,6 +135,28 @@ def rotate_based_on_letter(text, letter):
         rotations += 1
     rotations += 1
     return rotate_right(text, rotations)
+
+
+def undo_rotate_right_based_on_letter(text, letter):
+    """
+    :type text: str
+    :type letter: str
+    :rtype: str
+
+    >>> undo_rotate_right_based_on_letter("ecabd", "b")
+    'abdec'
+    >>> undo_rotate_right_based_on_letter("decab", "d")
+    'ecabd'
+    >>> undo_rotate_right_based_on_letter("efghabcd", "d")
+    'abcdefgh'
+    >>> undo_rotate_right_based_on_letter("bcdefgha", "f")
+    'abcdefgh'
+    """
+    reverted = text
+    while True:
+        reverted = rotate_left(reverted, 1)
+        if rotate_right_based_on_letter(reverted, letter) == text:
+            return reverted
 
 
 def swap_indexes(text, index_one, index_two):
@@ -215,7 +237,7 @@ def generate_scrambled_password(text, instructions):
 
         elif command == "rotate":
             if split_command[1] == "based":
-                text = rotate_based_on_letter(text, split_command[6])
+                text = rotate_right_based_on_letter(text, split_command[6])
             elif split_command[1] == "left":
                 text = rotate_left(text, int(split_command[2]))
             elif split_command[1] == "right":
@@ -230,6 +252,61 @@ def generate_scrambled_password(text, instructions):
     return text
 
 
+def unscramble_password(password, scrambling_instructions):
+    """
+    :type password: str
+    :type scrambling_instructions: list[str]
+    :rtype: str
+
+    >>> unscramble_password("deabc", ["rotate right 2 step"])
+    'abcde'
+    >>> unscramble_password("decab", ["rotate based on position of letter d"])
+    'ecabd'
+    >>> unscramble_password("bdeac", ["move position 1 to position 4"])
+    'bcdea'
+    >>> unscramble_password("bcdea", ["rotate left 1 step"])
+    'abcde'
+    >>> unscramble_password("edcba", ["reverse positions 0 through 4"])
+    'abcde'
+    >>> unscramble_password("edcba", ["swap letter d with letter b"])
+    'ebcda'
+    >>> unscramble_password("ebcda", ["swap position 4 with position 0"])
+    'abcde'
+    >>> unscramble_password("abcde", ["invalid"]) # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    ValueError: Got unexpected command: 'invalid'
+    """
+    inverted_instructions = scrambling_instructions[::-1]
+    for instruction in inverted_instructions:
+        split_command = instruction.split(" ")
+        command = split_command[0]
+
+        if command == "swap":
+            if split_command[1] == "position":
+                password = swap_indexes(password, int(split_command[2]), int(split_command[5]))
+            elif split_command[1] == "letter":
+                password = swap_letters(password, split_command[2], split_command[5])
+
+        elif command == "reverse":
+            password = reverse(password, int(split_command[2]), int(split_command[4]))
+
+        elif command == "rotate":
+            if split_command[1] == "based":
+                password = undo_rotate_right_based_on_letter(password, split_command[6])
+            elif split_command[1] == "left":
+                password = rotate_right(password, int(split_command[2]))
+            elif split_command[1] == "right":
+                password = rotate_left(password, int(split_command[2]))
+
+        elif command == "move":
+            password = move(password, int(split_command[5]), int(split_command[2]))
+
+        else:
+            raise ValueError("Got unexpected command: '%s'" % command)
+
+    return password
+
+
 def main():
     test_instructions = [line for line in get_file_lines("input/testinput.txt")]
     scrambled_password = generate_scrambled_password("abcde", test_instructions)
@@ -238,6 +315,9 @@ def main():
     instructions = [line for line in get_file_lines("input/input.txt")]
     scrambled_password = generate_scrambled_password("abcdefgh", instructions)
     print "The scrambled password is: %s" % scrambled_password
+
+    password = unscramble_password("fbgdceah", instructions)
+    print "The unscrambled password is: %s" % password
 
 
 if __name__ == '__main__':
