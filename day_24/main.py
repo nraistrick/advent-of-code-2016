@@ -16,6 +16,7 @@ y
 
 """
 from collections import namedtuple
+from itertools import permutations
 from common.common import get_file_lines
 
 OPEN = "."
@@ -33,6 +34,26 @@ def get_start_location(robot_map):
         for y, location in enumerate(column):
             if location == '0':
                 return x, y
+
+
+def get_all_location_numbers(robot_map):
+    """
+    :type robot_map: list[list[str]]
+    :rtype: list[str]
+
+    >>> robot_map = create_indexed_map(['1.3',
+    ...                                 '#0.',
+    ...                                 '.2.'])
+    >>> get_all_location_numbers(robot_map)
+    ['0', '1', '2', '3']
+    """
+    numbers = []
+    for x, column in enumerate(robot_map):
+        for y, location in enumerate(column):
+            if location.isdigit():
+                numbers.append(location)
+
+    return sorted(numbers)
 
 
 def create_indexed_map(lines):
@@ -97,13 +118,14 @@ def available_moves(x, y, robot_map):
     return moves
 
 
-def find_shortest_path_to_number(coordinates, robot_map):
+def find_shortest_path_to_number(coordinates, robot_map, number=None):
     """
     Finds the shortest path to the next number in a map using a
     breadth-first search
 
     :type coordinates: (int, int)
     :type robot_map: list[list[str]]
+    :type number: str
     :rtype: Move
 
     >>> robot_map = create_indexed_map(['...',
@@ -118,8 +140,12 @@ def find_shortest_path_to_number(coordinates, robot_map):
         move = locations.pop(0)
         x, y, steps = move.x, move.y, move.steps
 
-        if robot_map[x][y].isdigit() and steps != 0:
-            return move
+        if steps != 0:
+            if robot_map[x][y].isdigit() and not number:
+                return move
+
+            elif robot_map[x][y] == number:
+                return move
 
         if (x, y) in visited:
             continue
@@ -132,11 +158,11 @@ def find_shortest_path_to_number(coordinates, robot_map):
                 locations.append(Move(x, y, steps))
 
 
-def solve(robot_map):
+def moves_to_visit_each_number(robot_map):
     """
-    :type robot_map: list[list[str]]
-    :rtype: int
-    """
+     :type robot_map: list[list[str]]
+     :rtype: int
+     """
     x, y = get_start_location(robot_map)
     move = find_shortest_path_to_number((x, y), robot_map)
 
@@ -153,10 +179,52 @@ def solve(robot_map):
     return steps
 
 
+def get_shortest_round_trip(robot_map):
+    """
+    :type robot_map: list[list[str]]
+    :rtype: int
+    """
+    available_numbers = get_all_location_numbers(robot_map)
+    move_cache = {number: {} for number in available_numbers}
+    available_numbers.remove('0')
+
+    start = get_start_location(robot_map)
+
+    fewest_steps = None
+    for locations in permutations(available_numbers):
+
+        # Add return location
+        locations += '0',
+
+        x, y = start
+        steps = 0
+
+        for i, number in enumerate(locations):
+
+            # Calculate the distance between two numbers if not already cached
+            last_number = locations[i - 1]
+            if number not in move_cache[last_number]:
+                move = find_shortest_path_to_number((x, y), robot_map, number)
+                move_cache[last_number][number] = move
+
+            move = move_cache[last_number][number]
+            steps += move.steps
+
+            if fewest_steps and steps > fewest_steps:
+                break
+
+            if i == len(locations) - 1:
+                fewest_steps = steps
+
+            x, y = move.x, move.y
+
+    return fewest_steps
+
+
 def main():
     lines = [line for line in get_file_lines("input/input.txt")]
     robot_map = create_indexed_map(lines)
-    move_count = solve(robot_map)
+    move_count = get_shortest_round_trip(robot_map)
 
     print "Move count is: %d" % move_count
 
