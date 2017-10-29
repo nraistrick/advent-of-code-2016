@@ -1,3 +1,4 @@
+from copy import deepcopy
 from day_12.assembly_runner import AssemblyRunner
 
 
@@ -13,6 +14,9 @@ class ToggledAssemblyRunner(AssemblyRunner):
         """
         super(ToggledAssemblyRunner, self).__init__(lines)
         self.commands[self.TOGGLE] = self.toggle
+
+        # Holds snapshots of the registry at previous lines
+        self.old_register_store = {}
 
     @staticmethod
     def toggle_instruction(instruction):
@@ -67,3 +71,44 @@ class ToggledAssemblyRunner(AssemblyRunner):
         toggled_line = self.current_line + offset
         if toggled_line < len(self.lines):
             self.lines[toggled_line] = self.toggle_instruction(self.lines[toggled_line])
+
+    def multiply_difference(self, multiple, line_jump):
+        """
+        Multiplies the difference between values in current registry values and
+        values in a registry at a previous line. This improves the efficiency with
+        which we can carry out repeating loops in 'assembunny' calculations.
+
+        :param int multiple: The multiplication factor
+        :param int line_jump: A relative number of lines to move
+        """
+        updated_line = self.current_line + line_jump
+
+        # Check we're looking at a valid line
+        if updated_line < 0 or updated_line >= len(self.lines):
+            return
+
+        # Multiply the differences in value with the old registry
+        old_registry = self.old_register_store[updated_line]
+        for key in self.registry:
+            difference = self.registry[key] - old_registry[key]
+            self.registry[key] += difference * multiple
+
+    def jump(self, condition, distance):
+        if self.translate(condition) == 0:
+            return
+
+        line_jump = self.translate(distance)
+        if line_jump > 0 or condition.isdigit():
+            super(ToggledAssemblyRunner, self).jump(condition, distance)
+
+        # We're jumping backwards so let's increase the efficiency of
+        # instruction execution by using multiplication
+        self.multiply_difference(self.translate(condition), line_jump)
+
+    def execute(self):
+        """
+        Runs available instructions to update the internal registry
+        """
+        for i in self.get_instructions():
+            self.old_register_store[self.current_line] = deepcopy(self.registry)
+            self.execute_instruction(i)
